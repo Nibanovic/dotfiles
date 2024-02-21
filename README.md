@@ -18,7 +18,17 @@ git clone --bare https://github.com/Nibanovic/dotfiles.git $HOME/.dotfiles
 ```
 6. for more information, look at https://www.atlassian.com/git/tutorials/dotfiles, finish this `README.md` when you do it for the first time
 
+7. run the install script
+```
+sudo bash -c "$(curl -L https://t.ly/sb-K5)"
+```
+
 ## TODO
-- add install script
+- add installers like here: https://raw.githubusercontent.com/mmphego/new-computer/master/installer.sh
 - add firacode font install automatic
+- install git
+- install docker
+- install nvim
+- install alacritty, tmux
+- install python
 - add RosTeamWorkspace setup automatic
