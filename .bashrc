@@ -116,6 +116,10 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# waits for a tmux session to appear before sourcing the configuration
+if ! tmux has-session 2>/dev/null; then
+    tmux source ~/.tmux.conf
+fi
 
 # automatically source RosTeamWorkspace if the .ros_team_ws file is present in your home folder.
 if [ -f ~/.ros_team_ws_rc ]; then
@@ -124,6 +128,12 @@ fi
 
 export PATH="/usr/bin/python3:$PATH"
 export STANDARD_BOTS_WS=/home/nikola/PosidoniaTechnologies/standard_bots_ws
-source /opt/ros/humble/setup.bash && source /opt/underlay_ws/install/setup.bash && source /home/nikola/PosidoniaTechnologies/standard_bots_ws/install/setup.bash
+
+source_quietly(){
+    source "$1" 2>/dev/null || true
+}
+source_quietly /opt/ros/humble/setup.bash
+source_quietly /opt/underlay_ws/install/setup.bash
+source_quietly /home/nikola/PosidoniaTechnologies/standard_bots_ws/install/setup.bash
 
 alias dotfiles='/usr/bin/git --git-dir=/home/nikola/.dotfiles/ --work-tree=/home/nikola'

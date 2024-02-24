@@ -24,11 +24,11 @@ sudo bash -c "$(curl -L https://t.ly/sb-K5)"
 ```
 
 ## TODO
+- make a minimal tmux status bar
 - add installers like here: https://raw.githubusercontent.com/mmphego/new-computer/master/installer.sh
 - add firacode font install automatic
-- install git
 - install docker
 - install nvim
-- install alacritty, tmux
+- make dotfiles cloning automatic
 - install python
 - add RosTeamWorkspace setup automatic

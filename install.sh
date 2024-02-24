@@ -29,11 +29,11 @@ InstallThis(){
 	for pkg in "$@"; do
 		sudo DEBIAN_FRONTEND=noninteractive apt install -y "${pkg}" || true;
 		sudo dpkg --configure -a || true;
-		sudo apt autoclean && sudo apt clean;
+		sudo apt-get autoclean && sudo apt-get clean;
 	done
 }
 InstallThisQuietly(){
-	sudo DEBIAN_FRONTEND=noninteractive apt install -y -qq "$1" < /dev/null > /dev/null || true
+	sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$1" < /dev/null > /dev/null || true
 }
 
 echon
@@ -44,7 +44,7 @@ echon
 
 ReposInstaller(){
 	cecho "${yellow}" "Updating packages..."
-	sudo apt update -qq || true;
+	sudo apt-get update -qq || true;
 	sudo dpkg --configure -a || true;
 	sudo -k sed -i -r 's"enabled=1"enabled=0"' /etc/default/apport # disable crash reporting
 	# install basic linux tools
@@ -77,7 +77,7 @@ InstallTerminalSupport(){
 }
 
 Cleanup(){
-	sudo apt clean && rm -rf -- *.deb* *.gpg* *.py*
+	sudo apt-get clean && rm -rf -- *.deb* *.gpg* *.py*
 	cecho "${green}" "##### Finished and cleaned up. ######"
     	echon
 	echo "Note that some of these changes require a logout/restart to take effect."
