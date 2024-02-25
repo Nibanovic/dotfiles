@@ -32,3 +32,4 @@ sudo bash -c "$(curl -L https://t.ly/sb-K5)"
 - make dotfiles cloning automatic
 - install python
 - add RosTeamWorkspace setup automatic
+- add automatic `tpm` install when installing `tmux`
