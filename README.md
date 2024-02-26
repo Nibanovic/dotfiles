@@ -1,4 +1,21 @@
 Personal .dotfiles repo.
+
+
+# DOING NOW:
+rose-pine based statusline
+- branch the rose pine plugin
+- add it to your tmux plugins
+- edit it to be much simpler and show only the thigs you want:
+`for the statusline`
+left: current user 
+center: window names (number, current window) like in catpuccin, only the active one is highlighted
+right: session name
+`for the prompt`:
+```
+~ CurrentDirectory
+> prompt
+```
+
 ## Installing on a new repository
 1. install git
 2. create `.dotfiles/` directory
@@ -23,7 +40,7 @@ git clone --bare https://github.com/Nibanovic/dotfiles.git $HOME/.dotfiles
 sudo bash -c "$(curl -L https://t.ly/sb-K5)"
 ```
 
-## TODO
+## TODO LATER
 - make a minimal tmux status bar
 - add installers like here: https://raw.githubusercontent.com/mmphego/new-computer/master/installer.sh
 - add firacode font install automatic
