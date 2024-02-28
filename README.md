@@ -50,3 +50,4 @@ sudo bash -c "$(curl -L https://t.ly/sb-K5)"
 - install python
 - add RosTeamWorkspace setup automatic
 - add automatic `tpm` install when installing `tmux`
+- during automatic install, set any bash scripts to executable with chmodx!

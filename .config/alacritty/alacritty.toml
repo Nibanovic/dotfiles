@@ -1,4 +1,8 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
+import = [
+  "~/.config/alacritty/rose-pine.toml",
+]
+
 [shell]
 program = "/bin/bash"
 args = [
@@ -41,3 +45,4 @@ bindings = [
   { key = "Q", mods = "Control|Shift", action = "Quit" }
   # ADD TMUX KEY BINDINGS
 ]
+

@@ -137,3 +137,6 @@ source_quietly /opt/underlay_ws/install/setup.bash
 source_quietly /home/nikola/PosidoniaTechnologies/standard_bots_ws/install/setup.bash
 
 alias dotfiles='/usr/bin/git --git-dir=/home/nikola/.dotfiles/ --work-tree=/home/nikola'
+
+# set up prompt coloring
+source ~/.prompt.sh
