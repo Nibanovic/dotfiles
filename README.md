@@ -3,18 +3,7 @@ Personal .dotfiles repo.
 
 # DOING NOW:
 rose-pine based statusline
-- branch the rose pine plugin
-- add it to your tmux plugins
-- edit it to be much simpler and show only the thigs you want:
-`for the statusline`
-left: current user 
-center: window names (number, current window) like in catpuccin, only the active one is highlighted
-right: session name
-`for the prompt`:
-```
-~ CurrentDirectory
-> prompt
-```
+- adjust colors in prompt and statusline to match
 
 ## Installing on a new repository
 1. install git
