@@ -132,9 +132,9 @@ export STANDARD_BOTS_WS=/home/nikola/PosidoniaTechnologies/standard_bots_ws
 source_quietly(){
     source "$1" 2>/dev/null || true
 }
-source_quietly /opt/ros/humble/setup.bash
-source_quietly /opt/underlay_ws/install/setup.bash
-source_quietly /home/nikola/PosidoniaTechnologies/standard_bots_ws/install/setup.bash
+#source_quietly /opt/ros/humble/setup.bash
+#source_quietly /opt/underlay_ws/install/setup.bash
+#source_quietly /home/nikola/PosidoniaTechnologies/standard_bots_ws/install/setup.bash
 
 alias dotfiles='/usr/bin/git --git-dir=/home/nikola/.dotfiles/ --work-tree=/home/nikola'
 
