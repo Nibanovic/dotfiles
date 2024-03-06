@@ -30,8 +30,6 @@ require('lazy').setup({
 
   require 'kickstart/plugins/gitsigns',
 
-  require 'kickstart/plugins/which-key',
-
   require 'kickstart/plugins/telescope',
 
   require 'kickstart/plugins/lspconfig',
@@ -40,7 +38,7 @@ require('lazy').setup({
 
   require 'kickstart/plugins/cmp',
 
-  require 'kickstart/plugins/tokyonight',
+  require 'kickstart/plugins/rose-pine',
 
   require 'kickstart/plugins/todo-comments',
 
