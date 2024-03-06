@@ -73,7 +73,7 @@ function git_branch {
 }
 
 function update_prompt {
-	PS1="$RESET$SUBTLE\W $(git_branch)$RESET\n$GOLD$BOLD> $RESET"
+	PS1="$RESET$SUBTLE$BOLD\W $(git_branch)$RESET\n$GOLD$BOLD> $RESET"
 }
 PROMPT_COMMAND=update_prompt
 
