@@ -68,9 +68,8 @@ readopts_and_go() {
     # If script called as something besides `rocker`, look for an
     # existing image and read its labels as config values; these are
     # overridden by everything else
-    local NAME=${CALLED_AS}
+    local NAME=${basename $THIS}
     local MULTIPLE_IMAGES=false
-    local DIR
     if test $NAME != rocker; then
         NAME=${NAME/./:}  # Turn name.tag into name:tag
         local IMAGE="$(docker image ls -q \
@@ -83,8 +82,6 @@ readopts_and_go() {
                     --format='{{.Config.Labels}}' | \
                 sed -e 's/map\[//' -e 's/\]//' -e 's/ /\n/g')"
             for A in $ARGS; do
-                local VAR="${A/:*/}"
-                test -z "${!VAR}" || continue  # Don't overwrite
                 case "$A" in
                     ROCKER_*) declare -g "${A/:/=}";;
                     *) : ;;
@@ -96,7 +93,7 @@ readopts_and_go() {
 
     # Read command line args
     declare -A ROCKER_CL_ARGS
-    while getopts :t:r:n:dbT:pi:h- ARG; do
+    while getopts :t:n:dbT:pi:r: ARG; do
         case $ARG in
             # Common args
             t) ROCKER_CL_ARGS[ROCKER_IMAGE_TAG]=$OPTARG ;;
@@ -111,7 +108,6 @@ readopts_and_go() {
             i) ROCKER_CL_ARGS[ROCKER_BASE_IMAGE]=$OPTARG ;;
             # Usage & end of args
             h) usage ;;
-            -) break ;;
             :) usage "Option -$OPTARG requires an argument" ;;
             *) usage "Illegal option -$OPTARG" ;;
         esac
@@ -120,20 +116,11 @@ readopts_and_go() {
 
     # Read from any .rocker config
     ROCKER_DIR="${ROCKER_DIR:-${ROCKER_CL_ARGS[ROCKER_DIR]:-${PWD}}}"
-    ROCKER_DIR="$(readlink -f ${ROCKER_DIR})"  # Abs path for script use
     cd $ROCKER_DIR
-    if test -z "${NO_ROCKER}"; then
-        for DIR in ${PWD} $(dirname ${BASH_SOURCE[0]}); do
-            if test -f ${DIR}/.rocker; then
-                source ${DIR}/.rocker
-                break
-            fi
-        done
-    fi
 
-    # Call any post-process function
-    if declare -F rocker_post > /dev/null; then
-        rocker_post
+    
+    if test -z "${NO_ROCKER}" -a -f ${PWD}/.rocker; then
+        source ${PWD}/.rocker
     fi
 
     # Command-line args override .rocker file
@@ -360,8 +347,6 @@ run() {
         -v /tmp/.X11-unix:/tmp/.X11-unix
         -v /dev/dri:/dev/dri
         -v /run/user/$HUID:/run/user/$HUID
-        --device /dev/snd
-        -e PULSE_SERVER=${XDG_RUNTIME_DIR}/pulse/native
     )
 
     # - container start-up config
@@ -422,7 +407,7 @@ entrypoint() {
     echo "${HUSER}:x:${HGID}:" >>/etc/group
     sed -i /etc/gshadow -e "/^${HUSER}:/ d" # Clean stale entries
     echo "${HUSER}:*::" >>/etc/gshadow
-    for GRP in sudo dialout plugdev video cdrom audio ${ROCKER_GROUPS}; do
+    for GRP in sudo dialout plugdev video cdrom ${ROCKER_GROUPS}; do
         getent group ${GRP} >/dev/null || continue
         adduser ${HUSER} ${GRP} >&/dev/null
     done
@@ -452,9 +437,7 @@ entrypoint() {
 }
 
 # Record cwd and script location before changing directory
-HERE="$(readlink -f $PWD)"
-CALLED_AS="$(basename $BASH_SOURCE)"
-THIS="$(readlink -f $BASH_SOURCE)"
+THIS="$(readlink -f $0)"
 
 # Debugging
 test "${ROCKER_TRACING_ON:-false}" = true || ROCKER_TRACING_ON=false
