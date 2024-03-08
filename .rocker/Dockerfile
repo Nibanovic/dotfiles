@@ -1,10 +1,36 @@
+###################################################
+# EDIT VARIABLES BELOW, DEPENDING ON YOUR CONFIG: #
+###################################################
 ARG ROS_DISTRO=humble
 
 ENV ROS_DISTRO=${ROS_DISTRO}
 
 ARG WORKDIR=/opt/underlay_ws
 
-RUN echo "standard_bots" > /etc/debian_chroot
+# structure: project_ws/src/project_name/docker
+# if your robot name is "blonk", you will have:
+# blonk_ws/
+#   src/
+#       blonk/
+#           docker/
+#               blonk.<ros-distro>   <-- this is the rocker script
+#               Dockerfile
+#               entrypoint.sh        <-- script ran when entering container
+#           .rocker                  <-- image build variables are here
+#           package_1/
+#           package_2/
+#           ...
+
+ARG PROJECT_NAME=maha
+# user name in the container
+ARG USER_NAME="$PROJECT_NAME-container"
+# workspace name
+ENV PROJECT_WS /home/${USER_NAME}/${PROJECT_NAME}_ws
+
+
+###################################################
+
+RUN echo ${PROJECT_NAME} > /etc/debian_chroot
 
 WORKDIR ${WORKDIR}
 
@@ -39,17 +65,17 @@ RUN --mount=type=cache,target=/var/cache/apt \
     && test -f /usr/lib/ccache/cc || ln -s ../../bin/ccache /usr/lib/ccache/cc
 
 
-COPY ../standard_bots.repos src/standard_bots/
-COPY ../standard_bots.upstream.repos src/standard_bots/
+COPY ../${PROJECT_NAME}.repos src/${PROJECT_NAME}/
+COPY ../${PROJECT_NAME}.upstream.repos src/${PROJECT_NAME}/
 
-RUN vcs import src/ < ${PWD}/src/standard_bots/standard_bots.repos --skip-existing && \
-    vcs import src/ < ${PWD}/src/standard_bots/standard_bots.upstream.repos --skip-existing && \
-    git clone https://github.com/ros-planning/moveit2.git -b humble src/moveit2 && \
+RUN vcs import src/ < ${PWD}/src/${PROJECT_NAME}/${PROJECT_NAME}.repos --skip-existing && \
+    vcs import src/ < ${PWD}/src/${PROJECT_NAME}/${PROJECT_NAME}.upstream.repos --skip-existing && \
+    ## moveit install ##
+    git clone https://github.com/ros-planning/moveit2.git -b ${ROS_DISTRO} src/moveit2 && \
     for repo in src/moveit2/moveit2.repos $(f="moveit2/moveit2_$ROS_DISTRO.repos"; test -r $f && echo $f); do vcs import src/ < "$repo" --skip-existing; done && \
-    # moveit2 tutorials and deps
-    git clone https://github.com/ros-planning/moveit2_tutorials.git -b humble src/moveit2_tutorials && \
-    vcs import src/ < ${PWD}/src/moveit2_tutorials/moveit2_tutorials.repos --skip-existing && \
     apt-get update && rosdep install -r --from-paths ./src --ignore-src --rosdistro $ROS_DISTRO -y
+
+    ## add gazebo and ros2 control
 
 
 FROM base AS pkg_deps
@@ -96,25 +122,21 @@ RUN --mount=type=cache,target=/ccache/ \
 RUN --mount=type=cache,target=/var/cache/apt \
     apt-get update \
     && apt-get install -y \
-    nlohmann-json3-dev
 
-COPY docker/entrypoint_bash.sh /usr/bin/
-COPY docker/entrypoint_command.sh /usr/bin/
-COPY docker/standard_bots.humble /usr/bin/entrypoint
+COPY docker/entrypoint.sh /usr/bin/
+COPY docker/${PROJECT_NAME}.humble /usr/bin/entrypoint
 
-RUN useradd -u 1000 -m -s /bin/bash control-box-bot
+RUN useradd -u 1000 -m -s /bin/bash ${USER_NAME}
 
-USER control-box-bot
+USER ${USER_NAME}
 
-ENV STANDARD_BOTS_WS /home/control-box-bot/standard_bots_ws
+RUN mkdir -p $PROJECT_WS
 
-RUN mkdir -p $STANDARD_BOTS_WS
+WORKDIR $PROJECT_WS
 
-WORKDIR $STANDARD_BOTS_WS
+COPY ./ ${PROJECT_WS}/src/${PROJECT_NAME}
 
-COPY ./ ${STANDARD_BOTS_WS}/src/standard_bots
-
-RUN source /opt/ros/humble/setup.bash && source /opt/underlay_ws/install/setup.bash \
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash && source /opt/underlay_ws/install/setup.bash \
     && colcon build --event-handlers desktop_notification- status- \
  --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo  -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
  --parallel-workers $(nproc)
