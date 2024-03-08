@@ -9,6 +9,10 @@ return {
       },
       formatters_by_ft = {
         lua = { 'stylua' },
+        python = { "isort", "black" },
+        cpp = { "clang_format" },
+        cmake = { "cmake_format" },
+        zig = { "zigfmt" }
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
