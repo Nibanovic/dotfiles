@@ -71,9 +71,16 @@ function git_branch {
 		echo "" 
 	fi
 }
+function is_in_container {
+	if [ -f /.dockerenv ]; then
+		echo "$RESET$FOAM$BOLD󰡨 ";
+	else
+		echo "";
+	fi
+}
 
 function update_prompt {
-	PS1="$RESET$SUBTLE$BOLD\W $(git_branch)$RESET\n$GOLD$BOLD> $RESET"
+	PS1="$(is_in_container)$RESET$SUBTLE$BOLD\W $(git_branch)$RESET\n$GOLD$BOLD> $RESET"
 }
 PROMPT_COMMAND=update_prompt
 
