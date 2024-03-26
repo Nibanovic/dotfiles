@@ -54,7 +54,7 @@ function set_git_color {
 	if [[ -z $(git status --porcelain) ]]; then
 		color+=$PINE  # all changes commited and histories match
 	fi
-	if [[  $(git rev-list HEAD ^HEAD@{upstream} 2>/dev/null) ]]; then
+	if [[  $(git rev-list HEAD ^remotes/origin/$(git name-rev --name-only HEAD) 2>/dev/null) ]]; then
 		color+=$GOLD  # local and remote histories differ
 	fi
 	if [[ -n $(git status --porcelain) ]]; then

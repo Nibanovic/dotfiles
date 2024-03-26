@@ -12,7 +12,7 @@ return {
         python = { "isort", "black" },
         cpp = { "clang_format" },
         cmake = { "cmake_format" },
-        zig = { "zigfmt" }
+        -- zig = { "zigfmt" }
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --

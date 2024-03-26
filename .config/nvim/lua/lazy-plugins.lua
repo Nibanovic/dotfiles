@@ -34,7 +34,7 @@ require('lazy').setup({
 
   require 'kickstart/plugins/lspconfig',
 
-  require 'kickstart/plugins/conform',
+  -- require 'kickstart/plugins/conform',
 
   require 'kickstart/plugins/cmp',
 
@@ -46,7 +46,11 @@ require('lazy').setup({
 
   require 'kickstart/plugins/treesitter',
 
-  require 'kickstart.plugins.indent_line',
+  require 'kickstart/plugins/indent_line',
+
+  require 'kickstart/plugins/leap',
+
+  require 'kickstart/plugins/dressing',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
